@@ -46,6 +46,10 @@ to quickly create a Cobra application.`,
 		fmt.Println(<-messagesBuffer)
 
 		producer()
+		ch1 := make(chan int, 10)
+		go p(ch1)
+		go c(ch1)
+		select {}
 
 	},
 }
@@ -76,4 +80,18 @@ func producer() {
 	done := make(chan bool, 1)
 	go worker(done)
 	<-done
+}
+
+func p(ch1 chan<- int) {
+	for i := 1; i < 10000; i++ {
+		time.Sleep(10 * time.Microsecond)
+		ch1 <- i
+	}
+	close(ch1)
+}
+
+func c(ch1 chan int) {
+	for e := range ch1 {
+		fmt.Println(e)
+	}
 }
