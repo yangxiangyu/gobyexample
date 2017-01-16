@@ -17,14 +17,12 @@ package cmd
 import (
 	"fmt"
 
-	"time"
-
 	"github.com/spf13/cobra"
 )
 
-// channelCmd represents the channel command
-var channelCmd = &cobra.Command{
-	Use:   "channel",
+// mutexCmd represents the mutex command
+var mutexCmd = &cobra.Command{
+	Use:   "mutex",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -34,64 +32,21 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// TODO: Work your own magic here
-		message := make(chan string)
-		go func() { message <- "ping" }()
-		msg := <-message
-		fmt.Println(msg)
-
-		messagesBuffer := make(chan string, 2)
-		messagesBuffer <- "buffer"
-		messagesBuffer <- "channel"
-		fmt.Println(<-messagesBuffer)
-		fmt.Println(<-messagesBuffer)
-
-		producer()
-		ch1 := make(chan int, 10)
-		go channel_p(ch1)
-		go channel_c(ch1)
-		select {}
-
+		fmt.Println("mutex called")
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(channelCmd)
+	RootCmd.AddCommand(mutexCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// channelCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// mutexCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// channelCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// mutexCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-}
-
-func worker(done chan bool) {
-	fmt.Print("working...")
-	time.Sleep(time.Second)
-	fmt.Println("done")
-	done <- true
-}
-
-func producer() {
-	done := make(chan bool, 1)
-	go worker(done)
-	<-done
-}
-
-func channel_p(ch1 chan<- int) {
-	for i := 1; i < 10000; i++ {
-		time.Sleep(10 * time.Microsecond)
-		ch1 <- i
-	}
-	close(ch1)
-}
-
-func channel_c(ch1 chan int) {
-	for e := range ch1 {
-		fmt.Println(e)
-	}
 }
