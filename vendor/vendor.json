@@ -63,10 +63,36 @@
 			"revisionTime": "2016-12-15T22:58:39Z"
 		},
 		{
+			"checksumSHA1": "R6DzcBLEP0BONPpsyr+11N7xh5w=",
+			"path": "github.com/labstack/gommon/color",
+			"revision": "7355c05c868a92405473246663876efc0780ac18",
+			"revisionTime": "2016-12-20T00:17:25Z"
+		},
+		{
+			"checksumSHA1": "DUZuYE8/WOqC+knSsAruUW2srfU=",
+			"path": "github.com/labstack/gommon/log",
+			"revision": "7355c05c868a92405473246663876efc0780ac18",
+			"revisionTime": "2016-12-20T00:17:25Z"
+		},
+		{
 			"checksumSHA1": "506eXGmFfB7mgzbMcsdT/UAXJgI=",
 			"path": "github.com/magiconair/properties",
 			"revision": "9c47895dc1ce54302908ab8a43385d1f5df2c11c",
 			"revisionTime": "2016-11-28T00:34:34Z"
+		},
+		{
+			"checksumSHA1": "I4njd26dG5hxFT2nawuByM4pxzY=",
+			"origin": "github.com/labstack/gommon/vendor/github.com/mattn/go-colorable",
+			"path": "github.com/mattn/go-colorable",
+			"revision": "7355c05c868a92405473246663876efc0780ac18",
+			"revisionTime": "2016-12-20T00:17:25Z"
+		},
+		{
+			"checksumSHA1": "xZuhljnmBysJPta/lMyYmJdujCg=",
+			"origin": "github.com/labstack/gommon/vendor/github.com/mattn/go-isatty",
+			"path": "github.com/mattn/go-isatty",
+			"revision": "7355c05c868a92405473246663876efc0780ac18",
+			"revisionTime": "2016-12-20T00:17:25Z"
 		},
 		{
 			"checksumSHA1": "LAR/G/IY1GviHYkGAoi6kVXq1Jg=",
@@ -85,6 +111,12 @@
 			"path": "github.com/pelletier/go-toml",
 			"revision": "017119f7a78a0b5fc0ea39ef6be09f03acf3345d",
 			"revisionTime": "2016-12-13T14:20:06Z"
+		},
+		{
+			"checksumSHA1": "nEtyl7x+rJd8RU/CEUVLznVCPx0=",
+			"path": "github.com/smallnest/gofsm",
+			"revision": "fcad54c595d3310a5109ec61200b1a5b6dcdbfab",
+			"revisionTime": "2016-12-25T07:29:05Z"
 		},
 		{
 			"checksumSHA1": "iGmLeUVcmiFgd4/iK2Tmx7WIoa4=",
@@ -127,6 +159,13 @@
 			"path": "github.com/spf13/viper",
 			"revision": "5ed0fc31f7f453625df314d8e66b9791e8d13003",
 			"revisionTime": "2016-12-13T09:38:49Z"
+		},
+		{
+			"checksumSHA1": "PQy6kV2rK5B3qtCRpANzgRQPnFs=",
+			"origin": "github.com/labstack/gommon/vendor/github.com/valyala/fasttemplate",
+			"path": "github.com/valyala/fasttemplate",
+			"revision": "7355c05c868a92405473246663876efc0780ac18",
+			"revisionTime": "2016-12-20T00:17:25Z"
 		},
 		{
 			"checksumSHA1": "uTQtOqR0ePMMcvuvAIksiIZxhqU=",
