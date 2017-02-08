@@ -18,19 +18,41 @@ var blackboardCmd = &cobra.Command{
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// TODO: Work your own magic here
-		f1()
+		resultc := make(chan int, 10)
+		// resp, err := http.Get("http://www.qq.com/")
+		// if err != nil {
+		// fmt.Println(err)
+		// }
+		// body, err := ioutil.ReadAll(resp.Body)
+		// resultc <- string(body)
+		// fmt.Println(i)
+		// defer resp.Body.Close()
+
+		go productorbody(resultc)
+		go readbody(resultc)
+		// close(resultc)
+		select {}
 		fmt.Println("blackboard called")
 	},
 }
 
-func init() {
-	RootCmd.AddCommand(blackboardCmd)
-
+type UrlList struct {
+	urls []string
 }
 
-func f1() {
-	ts := tesstruct{p: "ssss"}
-	fmt.Println("aaaa")
-	fmt.Println(ts)
+func productorbody(resultc chan<- int) {
+	for i := 1; i < 1000; i++ {
+		resultc <- i
+	}
+}
+
+func readbody(resultc chan int) {
+	for result := range resultc {
+		fmt.Println(result)
+	}
+}
+
+func init() {
+	RootCmd.AddCommand(blackboardCmd)
 
 }
