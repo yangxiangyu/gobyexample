@@ -11,15 +11,9 @@ import (
 // fsmCmd represents the fsm command
 var fsmCmd = &cobra.Command{
 	Use:   "fsm",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "",
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
 		TFSM()
 		fmt.Println("fsm called")
 	},
@@ -27,16 +21,24 @@ to quickly create a Cobra application.`,
 
 type Turnstile struct {
 	ID         uint64
-	EventCount uint64   //事件统计
-	CoinCount  uint64   //投币事件统计
-	PassCount  uint64   //顾客通过事件统计
-	State      string   //当前状态
-	States     []string //历史经过的状态
+	EventCount uint64        //事件统计
+	CoinCount  uint64        //投币事件统计
+	PassCount  uint64        //顾客通过事件统计
+	State      interface{}   //当前状态
+	States     []interface{} //历史经过的状态
 }
+
+const (
+	Pending = iota
+	Processing
+	Solved
+	Upgraded
+	Ignored
+)
 
 type TurnstileEventProcessor struct{}
 
-func (p *TurnstileEventProcessor) OnExit(fromState string, args []interface{}) {
+func (p *TurnstileEventProcessor) OnExit(fromState interface{}, args []interface{}) {
 	t := args[0].(*Turnstile)
 	if t.State != fromState {
 		panic(fmt.Errorf("转门 %v 的状态与期望的状态 %s 不一致，可能在状态机外被改变了", t, fromState))
@@ -45,7 +47,7 @@ func (p *TurnstileEventProcessor) OnExit(fromState string, args []interface{}) {
 	log.Infof("转门 %d 从状态 %s 改变", t.ID, fromState)
 }
 
-func (p *TurnstileEventProcessor) Action(action string, fromState string, toState string, args []interface{}) {
+func (p *TurnstileEventProcessor) Action(action interface{}, fromState interface{}, toState interface{}, args []interface{}) {
 	t := args[0].(*Turnstile)
 	t.EventCount++
 
@@ -58,7 +60,7 @@ func (p *TurnstileEventProcessor) Action(action string, fromState string, toStat
 	}
 }
 
-func (p *TurnstileEventProcessor) OnEnter(toState string, args []interface{}) {
+func (p *TurnstileEventProcessor) OnEnter(toState interface{}, args []interface{}) {
 	t := args[0].(*Turnstile)
 	t.State = toState
 	t.States = append(t.States, toState)
@@ -70,10 +72,10 @@ func initFSM() *fsm.StateMachine {
 	delegate := &fsm.DefaultDelegate{P: &TurnstileEventProcessor{}}
 
 	transitions := []fsm.Transition{
-		fsm.Transition{From: "Locked", Event: "Coin", To: "Unlocked", Action: "check"},
-		fsm.Transition{From: "Locked", Event: "Push", To: "Locked", Action: "invalid-push"},
-		fsm.Transition{From: "Unlocked", Event: "Push", To: "Locked", Action: "pass"},
-		fsm.Transition{From: "Unlocked", Event: "Coin", To: "Unlocked", Action: "repeat-check"},
+		{From: "Locked", Event: "Coin", To: "Unlocked", Action: "check"},
+		{From: "Locked", Event: "Push", To: "Locked", Action: "invalid-push"},
+		{From: "Unlocked", Event: "Push", To: "Locked", Action: "pass"},
+		{From: "Unlocked", Event: "Coin", To: "Unlocked", Action: "repeat-check"},
 	}
 
 	return fsm.NewStateMachine(delegate, transitions...)
@@ -83,7 +85,8 @@ func TFSM() {
 	ts := &Turnstile{
 		ID:     1,
 		State:  "Locked",
-		States: []string{"Locked"},
+		States: []interface{}{"Locked"},
+
 	}
 	fsm := initFSM()
 

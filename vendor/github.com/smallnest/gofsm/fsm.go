@@ -15,16 +15,16 @@ import (
 
 // Transition is a state transition and all data are literal values that simplifies FSM usage and make it generic.
 type Transition struct {
-	From   string
-	Event  string
-	To     string
-	Action string
+	From   interface{}
+	Event  interface{}
+	To     interface{}
+	Action interface{}
 }
 
 // Delegate is used to process actions. Because gofsm uses literal values as event, state and action, you need to handle them with corresponding functions. DefaultDelegate is the default delegate implementation that splits the processing into three actions: OnExit Action, Action and OnEnter Action. you can implement different delegates.
 type Delegate interface {
 	// HandleEvent handles transitions
-	HandleEvent(action string, fromState string, toState string, args []interface{})
+	HandleEvent(action interface{}, fromState interface{}, toState interface{}, args []interface{})
 }
 
 // StateMachine is a FSM that can handle transitions of a lot of objects. delegate and transitions are configured before use them.
@@ -35,25 +35,27 @@ type StateMachine struct {
 
 // Error is an error when processing event and state changing.
 type Error interface {
-	error
-	BadEvent() string
-	CurrentState() string
+	BadEvent() interface{}
+	CurrentState() interface{}
 }
 
 type smError struct {
-	badEvent     string
-	currentState string
+	badEvent     interface{}
+	currentState interface{}
 }
 
-func (e smError) Error() string {
+func (e smError) Error() interface{} {
+
 	return fmt.Sprintf("state machine error: cannot find transition for event [%s] when in state [%s]\n", e.badEvent, e.currentState)
 }
 
-func (e smError) BadEvent() string {
+func (e smError) BadEvent() interface{} {
+
 	return e.badEvent
 }
 
-func (e smError) CurrentState() string {
+func (e smError) CurrentState() interface{} {
+
 	return e.currentState
 }
 
@@ -63,7 +65,7 @@ func NewStateMachine(delegate Delegate, transitions ...Transition) *StateMachine
 }
 
 // Trigger fires a event. You must pass current state of the processing object, other info about this object can be passed with args.
-func (m *StateMachine) Trigger(currentState string, event string, args ...interface{}) Error {
+func (m *StateMachine) Trigger(currentState interface{}, event interface{}, args ...interface{}) Error {
 	trans := m.findTransMatching(currentState, event)
 	if trans == nil {
 		return smError{event, currentState}
@@ -76,7 +78,7 @@ func (m *StateMachine) Trigger(currentState string, event string, args ...interf
 }
 
 // findTransMatching gets corresponding transition according to current state and event.
-func (m *StateMachine) findTransMatching(fromState string, event string) *Transition {
+func (m *StateMachine) findTransMatching(fromState interface{}, event interface{}) *Transition {
 	for _, v := range m.transitions {
 		if v.From == fromState && v.Event == event {
 			return &v
