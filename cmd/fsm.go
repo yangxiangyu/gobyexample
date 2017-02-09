@@ -34,6 +34,12 @@ const (
 	Solved
 	Upgraded
 	Ignored
+	Ok
+	Close
+	Ignore
+	Claim
+	UnhandledTimeout
+	handledTimeout
 )
 
 type TurnstileEventProcessor struct{}
@@ -76,6 +82,7 @@ func initFSM() *fsm.StateMachine {
 		{From: "Locked", Event: "Push", To: "Locked", Action: "invalid-push"},
 		{From: "Unlocked", Event: "Push", To: "Locked", Action: "pass"},
 		{From: "Unlocked", Event: "Coin", To: "Unlocked", Action: "repeat-check"},
+		{From: Pending, Event: Claim, To: Processing, Action: "check"},
 	}
 
 	return fsm.NewStateMachine(delegate, transitions...)
@@ -88,7 +95,14 @@ func TFSM() {
 		States: []interface{}{"Locked"},
 
 	}
+	ts2 := &Turnstile{
+		ID:     2,
+		State:  Pending,
+		States: []interface{}{"Locked"},
+
+	}
 	fsm := initFSM()
+	fsm.Trigger(ts2.State, Claim, ts2)
 
 	//推门
 	//没刷卡/投币不可进入
