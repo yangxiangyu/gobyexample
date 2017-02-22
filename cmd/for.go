@@ -21,6 +21,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type T struct {
+	Id   int64
+	Name string
+}
+
 // forCmd represents the for command
 var forCmd = &cobra.Command{
 	Use:   "for",
@@ -39,6 +44,15 @@ to quickly create a Cobra application.`,
 		l.PushBack("2")
 		for e := l.Front(); e != nil; e = e.Next() {
 			fmt.Println(e.Value)
+		}
+
+		data := []int{1, 2, 3, 4, 5}
+		ts := []T{{Id: 111, Name: "aaa"}, {Id: 222, Name: "bbbb"}}
+		for d := range (data) {
+			fmt.Println(d)
+		}
+		for t:=range(ts){
+			fmt.Println(ts[t].Id)
 		}
 
 		fmt.Println("for called")
