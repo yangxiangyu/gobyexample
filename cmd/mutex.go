@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"sync"
 )
 
 // mutexCmd represents the mutex command
@@ -32,21 +33,21 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// TODO: Work your own magic here
+		var mutex sync.Mutex
+		for i:=0;i<100;i++{
+			go func(i int){
+				mutex.Lock()
+				fmt.Println("Lock the lock d%",i)
+				fmt.Println("The Lock is locked d%",i)
+				defer mutex.Unlock()
+			}(i)
+		}
+		select {}
 		fmt.Println("mutex called")
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(mutexCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// mutexCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// mutexCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 }
