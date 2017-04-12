@@ -85,8 +85,11 @@ var timeCmd = &cobra.Command{
 		p(d.Seconds())
 		p(d.Nanoseconds())
 		p(then.Add(d))
-		fmt.Println("time now")
-		fmt.Println(strconv.FormatInt(time.Now().Unix(), 10))
+		fmt.Println("timenow" + strconv.FormatInt(time.Now().Unix(), 10))
+		fmt.Println("timenow + 600")
+		fmt.Println(time.Now().Unix() + 600)
+		time.Sleep(time.Second * 10)
+		fmt.Println(time.Now().Unix())
 		fmt.Println("time called")
 	},
 }

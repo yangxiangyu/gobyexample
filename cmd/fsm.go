@@ -93,13 +93,11 @@ func TFSM() {
 		ID:     1,
 		State:  "Locked",
 		States: []interface{}{"Locked"},
-
 	}
 	ts2 := &Turnstile{
 		ID:     2,
 		State:  Pending,
 		States: []interface{}{"Locked"},
-
 	}
 	fsm := initFSM()
 	fsm.Trigger(ts2.State, Claim, ts2)

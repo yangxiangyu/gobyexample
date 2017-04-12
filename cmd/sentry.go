@@ -15,61 +15,52 @@
 package cmd
 
 import (
-	"container/list"
 	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
+	"github.com/getsentry/raven-go"
+	"os"
 )
 
-type T struct {
-	Id   int64
-	Name string
-}
-
-// forCmd represents the for command
-var forCmd = &cobra.Command{
-	Use:   "for",
+// sentryCmd represents the sentry command
+var sentryCmd = &cobra.Command{
+	Use:   "sentry",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
-
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+
 	Run: func(cmd *cobra.Command, args []string) {
 		// TODO: Work your own magic here
-		l := list.New()
-		l.PushBack("1")
-		l.PushBack("2")
-		for e := l.Front(); e != nil; e = e.Next() {
-			fmt.Println(e.Value)
-		}
-
-		data := []int{1, 2, 3, 4, 5}
-		ts := []T{{Id: 111, Name: "aaa"}, {Id: 222, Name: "bbbb"}}
-		for d := range data {
-			fmt.Println(d)
-		}
-		for t := range ts {
-			fmt.Println(ts[t].Id)
-		}
-
-		fmt.Println("for called")
+		sentryT()
+		fmt.Println("sentry called")
 	},
+
 }
 
 func init() {
-	RootCmd.AddCommand(forCmd)
+	RootCmd.AddCommand(sentryCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// forCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// sentryCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// forCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
+	// sentryCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	raven.SetDSN("http://dba8f4d73fcc4920999596dc2dab82f8:892c77a0bf40401f87e399656947db7f@c3-op-sentry.bj/11")
+}
+func sentryT() {
+	f, err := os.Open("filename.ext")
+	if err != nil {
+		raven.CaptureErrorAndWait(err, nil)
+		log.Panic(err)
+	}
+	fmt.Println(f)
 }
