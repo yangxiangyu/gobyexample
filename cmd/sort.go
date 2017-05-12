@@ -29,9 +29,8 @@ var sortCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	Run: func(cmd *cobra.Command, args []string) {
 		l := genRandIntList(Ti)
-		fmt.Println(l)
-		lq:=qsort(l)
-		fmt.Println(lq)
+		qsort2(l)
+		// fmt.Println(lq)
 		fmt.Println("sort called")
 	},
 }
@@ -77,4 +76,31 @@ func qsort(a []int) []int {
 	qsort(a[left+1:])
 
 	return a
+}
+
+func qsort2(a []int) []int {
+	if len(a) < 2 {
+		return a
+	}
+
+	var (
+		left, right, p, r []int
+	)
+
+	// Pile elements smaller than the pivot on the left
+	for i := range a {
+		if a[i] == a[0] {
+			p = append(p, a[i])
+		}
+		if a[i] < a[0] {
+			left = append(left, a[i])
+		}
+		if a[i] > a[0] {
+			right = append(right, a[i])
+		}
+	}
+	r = append(qsort2(left), p...)
+	r = append(r, qsort2(right)...)
+
+	return r
 }
